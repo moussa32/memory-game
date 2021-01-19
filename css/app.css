@@ -79,6 +79,18 @@ h1 {
     cursor: default;
     background: #02ccba;
     font-size: 33px;
+    animation-name: example;
+    animation-duration: .6s;
+    transition: .6;
+}
+
+@keyframes example{
+    from{
+        transform: scale(1);
+    }
+    to{
+        transform: scale(1.2);
+    }
 }
 
 /*
