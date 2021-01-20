@@ -66,9 +66,10 @@ h1 {
 }
 
 .deck .card.open {
-    transform: rotateY(0);
+    transform: rotateY(180deg);
     background: #02b3e4;
     cursor: default;
+    transition: .5s;
 }
 
 .deck .card.show {
@@ -101,6 +102,8 @@ h1 {
     text-align: left;
     width: 345px;
     margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .score-panel .stars {
@@ -118,4 +121,26 @@ h1 {
 .score-panel .restart {
     float: right;
     cursor: pointer;
+}
+
+.win-game{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-flow:column nowrap;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    z-index: 444;
+    top: 0;
+    overflow: hidden;
+}
+
+#new-game{
+    border: 2px rgb(0 0 0 / 19%) solid;
+    color:#fff;
+    padding: .8rem 2.5rem;
+    background: #02b3e4;
+    border-radius: 5px;
 }

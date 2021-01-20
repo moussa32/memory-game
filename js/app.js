@@ -3,6 +3,15 @@
 */
 
 let cards = [...document.querySelectorAll('.card')];
+let reGameButton = document.querySelector('#new-game');
+let resetGameButton = document.querySelector('.restart');
+let moveCounter = document.querySelector('.moves');
+let timerCounter = document.querySelector('.timer');
+
+
+//Game settings
+const cardsGrid = 16;
+let clicks = 0;
 
 /*
  * Display the cards on the page
@@ -43,14 +52,21 @@ let initialGame = () => {
         //Append new shuffled cards into html
         deck.appendChild(shuffledCard);
 
+        timer();
+
         shuffledCard.addEventListener('click', flipCard);
     });
 }
 
+let waitingFlip = false;
 let hasFlippedCard = false;
 let firstCard, secondCard;
+let winGame = document.querySelector('.win-game');
+
 
 function flipCard() {
+    if(waitingFlip) return;
+    if(this === firstCard) return;
     classState('toggle', this, 'open', 'show');
 
     if(!hasFlippedCard){
@@ -63,6 +79,7 @@ function flipCard() {
     hasFlippedCard = false;
     secondCard = this;
     matching();
+    win();
 }
 
 //Matching the cards
@@ -81,33 +98,85 @@ function disableCards(){
 }
 
 function unflipCards(){
+    waitingFlip = true;
     setTimeout(() => {
         classState('remove', firstCard, 'show', 'open');
         classState('remove', secondCard, 'show', 'open');
-    }, 800);
+
+        waitingFlip = false;
+    }, 700);
+}
+
+function win(){
+    let matchedCards = document.querySelectorAll('.match');
+    clicks += 1;
+    moveCounter.textContent = clicks;
+    if(matchedCards.length === cardsGrid){
+        winGame.style.display = 'flex';
+        let stats = document.querySelector('.stats');
+        stats.textContent = `With ${clicks} Moves and 1 Stars.`;
+    }
+}
+
+function reGame(){
+    reGameButton.addEventListener('click', () =>{
+        clicks = 0;
+        winGame.style.display = 'none';
+        for(i = 0; i < cardsGrid; i++){
+            classState('remove', shuffledCards[i], 'show', 'open', 'match');
+        };
+        initialGame();
+    });
+}
+
+function resetGame(){
+    resetGameButton.addEventListener('click', () =>{
+        clicks = 0;
+        moveCounter.textContent = clicks;
+        for(i = 0; i < cardsGrid; i++){
+            classState('remove', shuffledCards[i], 'show', 'open', 'match');
+        };
+        initialGame();
+    });
 }
 
 
+function timer(){
+    let meniutes = 0;
+    let seconds = 0;
+
+    setInterval(() =>{
+        seconds += 1;
+
+        if(seconds == 60){
+            meniutes += 1;
+            seconds = 0;
+        }
+        timerCounter.textContent = `${meniutes} min : ${seconds} sec`;
+    },1000);
+    
+}
 
 
-
-
-
-function classState(state, element, firstClass = null, secondClass = null){
+function classState(state, element, firstClass = null, secondClass, thirdClass){
     if(state === 'add'){
         element.classList.add(firstClass);
         element.classList.add(secondClass);
+        element.classList.add(thirdClass);
     }else if(state === 'toggle'){
         element.classList.toggle(firstClass);
         element.classList.toggle(secondClass);
+        element.classList.toggle(thirdClass);
     }else if (state === 'remove'){
         element.classList.remove(firstClass);
         element.classList.remove(secondClass);
+        element.classList.remove(thirdClass);
     }
 }
 
 initialGame();
-
+reGame();
+resetGame();
 
 /*
  * set up the event listener for a card. If a card is clicked:
